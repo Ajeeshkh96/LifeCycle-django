@@ -1,0 +1,25 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<br><br><br><br>
+<div class="container">
+  <a href="{% url 'add_banner_image' %}" class="btn btn-success float-end">Add Banner Image</a>
+  <h1 class="text-success">Product Banner Images:</h1>
+  <hr>
+  <div class="row">
+    {% for image in images %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ image.image.url }}" alt="Banner Image" class="card-img-top" width="300" height="150">
+          <div class="card-body">
+            <p class="card-text">{{ image.product }}</p>
+            <a href="{% url 'edit_banner_image' image.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'delete_banner_image' image.id %}" class="btn btn-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

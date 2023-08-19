@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- ========================= SECTION PAGETOP ========================= -->
+<section class="section-pagetop bg p-4">
+<div class="container">
+	{% if 'search' in request.path %}
+		<h2 class="title-page">Search Result</h2>
+	{% else %}
+		<h2 class="title-page">Our Store</h2>
+	{% endif %}
+</div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION INTRO END// ========================= -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content">
+<div class="container">
+
+<div class="row">
+	<aside class="col-md-3">
+
+<div class="card">
+	<!-- Sample HTML code with the brand filtering section -->
+<!-- Add the brand filter section within the existing template -->
+<article class="filter-group">
+	<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+					<i class="icon-control fa fa-chevron-down"></i>
+					<h6 class="title">Brands</h6>
+			</a>
+	</header>
+	<div class="filter-content collapse show" id="collapse_1" style="">
+			<div class="card-body">
+					<ul class="list-menu">
+							<li><a href="?brand=All" class="brand-filter">All Brands</a></li>
+							<li><a href="?brand=Montra" class="brand-filter">Montra</a></li>
+							<li><a href="?brand=Polygon" class="brand-filter">Polygon</a></li>
+							<li><a href="?brand=Ninety One" class="brand-filter">Ninety One</a></li>
+					</ul>
+			</div> <!-- card-body.// -->
+	</div>
+</article> <!-- filter-group  .// -->
+
+
+	<!-- Add the frame size filter section within the existing template -->
+<article class="filter-group">
+	<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
+					<i class="icon-control fa fa-chevron-down"></i>
+					<h6 class="title">Frame size</h6>
+			</a>
+	</header>
+	<div class="filter-content collapse show" id="collapse_4" style="">
+			<div class="card-body">
+					<label class="checkbox-btn">
+							<input type="checkbox" name="frame-size" value="18">
+							<span class="btn btn-light">18</span>
+					</label>
+
+					<label class="checkbox-btn">
+							<input type="checkbox" name="frame-size" value="18.5">
+							<span class="btn btn-light">18.5</span>
+					</label>
+
+					<label class="checkbox-btn">
+							<input type="checkbox" name="frame-size" value="19">
+							<span class="btn btn-light">19</span>
+					</label>
+
+					<label class="checkbox-btn">
+							<input type="checkbox" name="frame-size" value="19.5">
+							<span class="btn btn-light">19.5</span>
+					</label>
+			</div><!-- card-body.// -->
+	</div>
+</article> <!-- filter-group .// -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Event handler for frame size filtering clicks
+        $('input[name="frame-size"]').change(function () {
+            var selectedFrameSizes = [];
+            $('input[name="frame-size"]:checked').each(function () {
+                selectedFrameSizes.push($(this).val());
+            });
+
+            // Create a query parameter string with the selected frame sizes
+            var frameSizeQuery = selectedFrameSizes.length > 0 ? 'frame-size=' + selectedFrameSizes.join('&frame-size=') : '';
+
+            // Get the current URL and append the frame size query parameter
+            var currentUrl = window.location.href.split('?')[0];
+            var newUrl = currentUrl + '?' + frameSizeQuery;
+
+            // Redirect to the new URL with the frame size filters applied
+            window.location.href = newUrl;
+        });
+    });
+</script>
+
+
+<form method="GET" action="{% url 'store' %}">
+	<article class="filter-group">
+			<header class="card-header">
+					<a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+							<i class="icon-control fa fa-chevron-down"></i>
+							<h6 class="title">Price range</h6>
+					</a>
+			</header>
+			<div class="filter-content collapse show" id="collapse_3" style="">
+					<div class="card-body">
+							<div class="form-row">
+									<div class="form-group col-md-6">
+											<label>Min</label>
+											<select class="mr-2 form-control" name="min-price">
+													<option value="0">$0</option>
+													<option value="50">$50</option>
+													<option value="100">$100</option>
+													<option value="150">$150</option>
+													<option value="250">$250</option>
+													<option value="200">$200</option>
+													<option value="500">$500</option>
+													<option value="1000">$1000</option>
+											</select>
+									</div>
+									<div class="form-group text-right col-md-6">
+											<label>Max</label>
+											<select class="mr-2 form-control" name="max-price">
+													<option value="50">$50</option>
+													<option value="100">$100</option>
+													<option value="150">$150</option>
+													<option value="200">$200</option>
+													<option value="250">$250</option>
+													<option value="500">$500</option>
+													<option value="1000">$1000</option>
+													<option value="2000">$2000+</option>
+											</select>
+									</div>
+							</div> <!-- form-row.// -->
+							<button type="submit" class="btn btn-block btn-primary">Apply</button>
+					</div><!-- card-body.// -->
+			</div>
+	</article> <!-- filter-group .// -->
+</form>
+
+</div> <!-- card.// -->
+
+	</aside> <!-- col.// -->
+	<main class="col-md-9">
+
+<header class="border-bottom mb-4 pb-3">
+		<div class="form-inline">
+			<span class="mr-md-auto"><b>{{ product_count }}</b> items found </span>
+
+		</div>
+</header><!-- sect-heading -->
+
+<div class="row">
+	{% if products %}
+	{% for product in products %}
+	<div class="col-md-4">
+			<figure class="card card-product-grid">
+					<div class="img-wrap">
+							<a href="{{ product.get_url }}"><img src="{{ product.image.url }}"></a>
+					</div> <!-- img-wrap.// -->
+					<figcaption class="info-wrap">
+							<div class="fix-height">
+									<a href="{{ product.get_url }}" class="title">{{ product.brand }} {{ product.model }}</a>
+									<div class="price-wrap mt-2">
+											<span class="price">
+													<del>$ {{ product.rprice }}</del>
+													$ {{ product.price }}
+											</span>
+											<span class="discount text-success">
+													&nbsp;{{ product.discount_percentage|floatformat:"0" }}% Off
+											</span>
+									</div> <!-- price-wrap.// -->
+							</div>
+							<a href="{{ product.get_url }}" class="btn btn-block btn-primary">View Details</a>
+					</figcaption>
+			</figure>
+	</div> <!-- col.// -->
+	{% endfor %}
+	{% else %}
+	<div>
+			<h2>No result found. Please try again.</h2>
+	</div>
+	{% endif %}
+</div> <!-- row end.// -->
+
+
+
+<nav class="mt-4" aria-label="Page navigation sample">
+	{% if products.has_other_pages %}
+	  <ul class="pagination">
+			{% if products.has_previous %}
+	    <li class="page-item"><a class="page-link" href="?page={{products.previous_page_number}}">Previous</a></li>
+			{% else %}
+			<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+			{% endif %}
+
+			{% for i in products.paginator.page_range %}
+				{% if products.number == i %}
+	    		<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+				{% else %}
+					<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+				{% endif %}
+	    {% endfor %}
+
+			{% if products.has_next %}
+	    	<li class="page-item"><a class="page-link" href="?page={{products.next_page_number}}">Next</a></li>
+			{% else %}
+				<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+			{% endif %}
+	  </ul>
+	{% endif %}
+</nav>
+
+	</main> <!-- col.// -->
+
+</div>
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+{% endblock %}

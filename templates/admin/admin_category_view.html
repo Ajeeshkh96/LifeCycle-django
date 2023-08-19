@@ -1,0 +1,60 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+  {% include 'includes/alerts.html' %}
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Category Name</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cat in cat_details %}
+      <tr>
+        <td>{{cat.category_name}}</td>
+        <td>
+            <a class="btn btn-danger" href="admin_category_delete?uid={{cat.uid}}">Delete</a>
+            <a class="btn btn-warning" href="admin_category_edit?uid={{cat.uid}}">Edit</a>
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    <div class="text-center text-danger">{{message}}</div>
+    <div class="text-center">
+        <a class="btn btn-success" href="{% url 'admin_category_add' %}">Add Category</a>
+    </div>
+  </div>
+
+  <script>
+    function generateNotification(message) {
+      // Your code to show the notification to the user
+      // For example, you might use a Bootstrap alert or custom notification UI
+      // ...
+
+      // Store the notification message in Local Storage
+      storeNotification(message);
+    }
+
+    function storeNotification(message) {
+      // Get existing notifications from Local Storage
+      let notifications = localStorage.getItem('notifications');
+
+      // Parse the existing notifications as JSON or create an empty array if there are no notifications
+      notifications = notifications ? JSON.parse(notifications) : [];
+
+      // Add the new message to the notifications array
+      notifications.push(message);
+
+      // Save the updated notifications array back to Local Storage
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+    }
+  </script>
+
+
+{% endblock content %}

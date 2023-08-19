@@ -1,0 +1,43 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<br><br><br><br>
+  <div class="container w-50 border border-secondary">
+    <h1 class="text-success">{% if request.resolver_match.url_name == 'offer_create' %}Create New Offer:{% else %}Edit Offer:{% endif %}</h1>
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.name.id_for_label }}">Name:</label>
+        {{ form.name }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Description:</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
+        {{ form.start_date }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.end_date.id_for_label }}">End Date:</label>
+        {{ form.end_date }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.discount_percentage.id_for_label }}">Discount Percentage:</label>
+        {{ form.discount_percentage }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.applicable_products.id_for_label }}">Applicable Products:</label>
+        {{ form.applicable_products }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'offer_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

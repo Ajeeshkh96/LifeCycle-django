@@ -1,0 +1,40 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container mt-5">
+  <h1 class="mb-4">Add Coupon</h1>
+  <form method="post" class="row g-3">
+      {% csrf_token %}
+      <div class="col-md-6">
+          <label for="{{ form.code.id_for_label }}" class="form-label">Code</label>
+          <input type="text" class="form-control" id="{{ form.code.id_for_label }}" name="{{ form.code.name }}" placeholder="Enter coupon code">
+      </div>
+      <div class="col-md-6">
+          <label for="{{ form.discount_amount.id_for_label }}" class="form-label">Discount Amount</label>
+          <input type="text" class="form-control" id="{{ form.discount_amount.id_for_label }}" name="{{ form.discount_amount.name }}" placeholder="Enter discount amount">
+      </div>
+      <div class="col-md-6">
+          <label for="{{ form.valid_from.id_for_label }}" class="form-label">Valid From</label>
+          <input type="date" class="form-control" id="{{ form.valid_from.id_for_label }}" name="{{ form.valid_from.name }}">
+      </div>
+      <div class="col-md-6">
+          <label for="{{ form.valid_to.id_for_label }}" class="form-label">Valid To</label>
+          <input type="date" class="form-control" id="{{ form.valid_to.id_for_label }}" name="{{ form.valid_to.name }}">
+      </div>
+      <div class="col-md-6">
+          <label for="{{ form.active.id_for_label }}" class="form-label">Active</label>
+          <select class="form-select" id="{{ form.active.id_for_label }}" name="{{ form.active.name }}">
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+          </select>
+      </div>
+      <div class="col-12">
+          <button type="submit" class="btn btn-primary">Save Coupon</button>
+      </div>
+  </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+{% if order.status == 'New' or order.status == 'Accepted' %}
+
+YOUR ORDER HAS BEEN RECIEVED
+
+{% else %}
+
+YOUR ORDER HAS BEEN CANCELLED
+
+{% endif %}
+
+Order Number: {{order.order_number}}
+
+{% endautoescape %}

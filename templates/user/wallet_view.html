@@ -1,0 +1,66 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+
+{% include 'includes/alerts.html' %}
+
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+  <div class="container mt-5 col-md-6">
+    <div class="wallet-details">
+      <h2 class="wallet-title">Wallet Details</h2>
+      <div class="wallet-info">
+        <i class="fas fa-user wallet-icon"></i>
+        <span class="wallet-label">User:</span> {{ wallet.user.first_name }} {{wallet.user.last_name}}
+      </div>
+      <div class="wallet-info">
+        <i class="fas fa-wallet wallet-icon"></i>
+        <span class="wallet-label">Balance:</span> <i class="text-success">$ {{ wallet.balance }}</i>
+      </div>
+      {% comment %} <div class="wallet-info">
+        <i class="far fa-calendar-alt wallet-icon"></i>
+        <span class="wallet-label">Created At:</span> {{ wallet.created_at }}
+      </div> {% endcomment %}
+      <div class="wallet-info">
+        <i class="far fa-clock wallet-icon"></i>
+        <span class="wallet-label">Updated At:</span> {{ wallet.updated_at }}
+      </div>
+    </div>
+  </div>
+
+
+  <style>
+    .wallet-details {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .wallet-title {
+      font-size: 28px;
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .wallet-info {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .wallet-label {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .wallet-icon {
+      font-size: 20px;
+      margin-right: 10px;
+      color: #007bff;
+    }
+  </style>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+  font: 17px Arial, sans-serif;
+  margin: 0;
+}
+
+.coupon-card {
+  padding: 30px;
+  max-width: 600px;
+  margin: 50px;
+  border: 1px solid rgba(0,0,0,.05);
+  box-shadow: 1px 3px 8px rgba(0,0,0,.05);
+  border-radius: 8px
+}
+
+.coupon-card .coupon-card__content {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.coupon-card .image {
+  background: url("https://images.unsplash.com/photo-1610552050890-fe99536c2615?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1207&q=80");
+  height: 200px;
+}
+
+.coupon-card .coupon-code {
+  text-transform: uppercase;
+  font-family: monospace;
+  display: inline-block;
+  border: 2px dashed green;
+  border-radius: .25rem;
+  color: green;
+  text-align: center;
+}
+
+.coupon-description h2{
+  font-weight: bold;
+  color: green;
+}
+
+.coupon-card .coupon-code span {
+  font-size: 14px;
+  background: green;
+  color: #fff;
+  padding: 4px;
+  display: block;
+}
+
+.coupon-card .coupon-code strong {
+  font-size: 36px;
+  padding: 0 8px 4px;
+  display: block;
+}
+
+.coupon-card p {
+  font-size: 80%;
+  line-height: 130%;
+  color: gray;
+}

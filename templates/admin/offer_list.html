@@ -1,0 +1,24 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<br><br><br><br><br><br>
+  <div class="container mt-5 w-75 border border-secondary">
+    <br>
+    <a href="{% url 'offer_create' %}" class="btn btn-success float-end mb-3">Add Offer</a>
+    <h1 class="text-success">Offers List:</h1>
+    {% for offer in offers %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'offer_detail' offer.pk %}" class="text-decoration-none">{{ offer.name }}</a>
+            <span>{{ offer.start_date }} to {{ offer.end_date }}</span>
+          </div>
+          <div class="mt-2 float-end">
+            <a href="{% url 'offer_edit' offer.pk %}" class="btn btn-primary btn-sm">Edit</a>
+            <a href="{% url 'offer_delete' offer.pk %}" class="btn btn-danger btn-sm">Delete</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+
+<h2 class="text-primary">Order History:</h2>
+{% for order in orders %}
+<br>
+<article class="card border border-secondary">
+    <header class="card-header">
+        <strong class="d-inline-block mr-3">Order ID: {{ order.order_number }}</strong>
+        <span>Order Date: {{ order.created_at }}</span>
+    </header>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="text-muted">Delivery to</h6>
+                <p>
+                    {{ order.first_name }} {{ order.last_name }} <br>
+                    Phone {{ order.phone }} Email: {{ order.email }} <br>
+                    Location: {{ order.address_line_1 }}, {{ order.city }}, {{ order.state }} <br>
+                    P.O. Box: {{ order.pin_code }}
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-muted">Payment</h6>
+                {% if order.payment.payment_method == 'wallet' %}
+                <span class="text-success">
+                    <i class="fab fa-lg fa-google-wallet"></i>
+                    {{ order.payment }}
+                </span>
+                {% else %}
+                <span class="text-success">
+                    <i class="fab fa-lg fa-cc-visa"></i>
+                    {{ order.payment }}
+                </span>
+                {% endif %}
+                <p>
+                    Shipping fee: $5 <br>
+                    <span class="b">Total: {{ order.payment.amount_paid }}</span>
+                </p>
+            </div>
+        </div> <!-- row.// -->
+    </div> <!-- card-body .// -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            {% for product in order.orderproduct_set.all %}
+            <tr>
+                <td width="65">
+                    <img src="{{ product.product.image.url }}" class="img-xs border">
+                </td>
+                <td>
+                    <p class="title mb-0">{{ product.product.brand }} {{ product.product.model }} </p>
+                    <var class="price text-muted"> {{ product.product_price }}</var>
+                </td>
+                <td>
+                    {% if order.return_requests.all %}
+                        {% for item in order.return_requests.all %}
+                            {% if item.status == "Accepted" %}
+                                <var class="price text-success">Return {{ item.status }}</var>
+                            {% elif item.status == "Pending" %}
+                                <var class="price text-primary">Return {{ item.status }}</var>
+                            {% else %}
+                                <var class="price text-danger">Return {{ item.status }}</var>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if order.status == 'Cancelled' %}
+                        <var class="price text-danger"> {{ order.status }}</var>
+                        {% else %}
+                        <var class="price text-success"> {{ order.status }}</var>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            {% endfor %}
+
+            <td width="250">
+              <p class="payment-method">
+                {% if order.payment.payment_method == 'wallet' %}
+                Payment Method: <span class="text-primary">Wallet<span>
+                {% else %}
+                Payment Method: <span class="text-primary">{{ order.payment.payment_method }}</span>
+                {% endif %}
+              </p>
+              {% if order.can_be_cancelled %}
+              <a href="{% url 'cancel_order' order.order_number %}" class="btn btn-outline-danger">Cancel order</a>
+              {% endif %}
+              <a href="{% url 'order_details' order.order_number %}" class="btn btn-outline-dark">Details</a>
+            </td>
+
+          </tr>
+        </table>
+    </div> <!-- table-responsive .end// -->
+</article> <!-- order-group.// -->
+
+{% endfor %}
+
+
+{% endblock %}

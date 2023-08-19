@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<article class="container border border-secondary w-75">
+    <h1 class="text-center text-success"><u>Return Request</u></h1><br>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if return_request %}
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in order.orderproduct_set.all %}
+                    {% for returned_item in return_request.returnitem_set.all %}
+                        {% if product in returned_item.returned_items.all %}
+                            <tr>
+                                <td>
+                                    <img src="{{ product.product.image.url }}" class="img-xs border">
+                                    <p class="title mb-0">{{ product.product.brand }} {{ product.product.model }}</p>
+                                    <var class="price text-muted">{{ product.product_price }}</var>
+                                </td>
+                                <td>
+                                    <var class="reason">{{ return_request.reason }}</var>
+                                </td>
+                                <td>
+                                    {% if return_request.status == 'Accepted' %}
+                                    <var class="price text-success">{{ return_request.status }}</var><br>
+                                    <small class="text-success">( Refund amount is transfered to your wallet. )</small>
+                                    {% elif return_request.status == 'Pending' %}
+                                    <var class="price text-primary">{{ return_request.status }}</var>
+                                    {% else %}
+                                    <var class="price text-danger">{{ return_request.status }}</var>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <table class="table table-hover">
+            {% for product in order.orderproduct_set.all %}
+            <tr>
+                <td width="65">
+                    <img src="{{ product.product.image.url }}" class="img-xs border">
+                </td>
+                <td>
+                    <p class="title mb-0">{{ product.product.brand }} {{ product.product.model }} </p>
+                    <var class="price text-muted"> {{ product.product_price }}</var>
+                </td>
+
+                <td>
+                    <var class="price text-danger"> {{ return_request.status }}</var>
+                </td>
+                {% if not return_request %}
+                <td>
+                    <input type="checkbox" name="return_items" value="{{ product.id }}">
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        {% if not return_request %}
+        <h2>Reason for Return:</h2>
+        <textarea name="reason" rows="4" cols="50" required></textarea><br><br>
+
+        <button class="btn btn-success" type="submit">Submit Return Request</button><br><br>
+        {% endif %}
+    </form>
+</article>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}

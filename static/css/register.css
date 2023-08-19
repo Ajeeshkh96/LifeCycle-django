@@ -1,0 +1,80 @@
+body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			background: #ffffffd0 !important;
+		}
+
+		.form_container {
+			width: 300px;
+			margin-left: 80px;
+			margin-top: auto;
+			margin-bottom: auto;
+			background: #9fd19c;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 5px;
+		}
+
+		#form-title{
+			color: #fff;
+		}
+		.login_btn {
+			width: 100%;
+			background: #2b9e35 !important;
+			color: white !important;
+		}
+		.login_btn:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.login_container {
+			padding: 0 2rem;
+		}
+		.input-group-text {
+			background: #f7ba5b !important;
+			color: rgb(255, 255, 255) !important;
+			border: 0 !important;
+			border-radius: 0.25rem 0 0 0.25rem !important;
+		}
+		.input_user,
+		.input_pass:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+
+		/* for loading animation */
+
+		#loading-animation {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+
+		.spinner {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			border: 4px solid #f3f3f3;
+			border-top: 4px solid #3498db;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}

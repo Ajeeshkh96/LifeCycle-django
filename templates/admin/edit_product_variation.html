@@ -1,0 +1,24 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Edit Product Variation</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="frame_size" value="{{ variation.frame_size }}" required>
+
+        <input type="hidden" name="color" value="{{ variation.color }}" required>
+
+        <div class="form-group mb-3">
+            <label for="stock">Stock:</label>
+            <input type="number" class="form-control" name="stock" value="{{ variation.stock }}" required>
+            <div class="invalid-feedback">Please provide the stock quantity.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add stock</button>
+    </form>
+</div>
+
+{% endblock %}

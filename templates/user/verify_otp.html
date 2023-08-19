@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+  <div class="card-body">
+    <h4 class="card-title mb-4">OTP verification</h4>
+    {% include 'includes/alerts.html' %}
+    <form method="POST" id="otpForm">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Enter otp here..." name="otp">
+      </div> <!-- form-group// -->
+
+      {# Commented out because it's not used in this form #}
+      {# <div class="form-group"> #}
+      {#   <a href="{% url 'forgotPassword' %}" class="float-right">Forgot password?</a> #}
+      {# </div> <!-- form-group form-check .// --> #}
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-block" value="Verify">
+      </div> <!-- form-group// -->
+
+      <!-- OTP Counter and Resend OTP link -->
+      <div class="form-group">
+        <div class="countdown" id="countdown"></div>
+        <a href="#" id="resendOTP" class="hidden">Resend OTP</a>
+      </div>
+    </form>
+  </div> <!-- card-body.// -->
+</div> <!-- card .// -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Set the countdown duration in minutes
+    const countdownDuration = 1;
+
+    // Calculate the target date and time for the countdown
+    const targetDate = new Date().getTime() + countdownDuration * 60 * 1000;
+
+    // Update the countdown every second
+    const countdownInterval = setInterval(function () {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      // Calculate the minutes and seconds left
+      const minutes = Math.floor(timeLeft / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      // Display the countdown in the element with id="countdown"
+      document.getElementById("countdown").innerHTML = formatTime(minutes, seconds);
+
+      // If the countdown is finished, display the link and clear the interval
+      if (timeLeft < 0) {
+        document.getElementById("countdown").innerHTML = "";
+        document.getElementById("resendOTP").classList.remove("hidden");
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+
+    // Function to format time as "mm:ss"
+    function formatTime(minutes, seconds) {
+      return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    }
+  });
+
+  // Handle Resend OTP click
+  document.getElementById("resendOTP").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Hide the Resend OTP link
+    document.getElementById("resendOTP").classList.add("hidden");
+
+    // Reset the countdown duration in minutes for the new OTP
+    const countdownDuration = 1;
+    const targetDate = new Date().getTime() + countdownDuration * 60 * 1000;
+
+    // Start the countdown again
+    const countdownInterval = setInterval(function () {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      const minutes = Math.floor(timeLeft / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").innerHTML = formatTime(minutes, seconds);
+
+      if (timeLeft < 0) {
+        document.getElementById("countdown").innerHTML = "";
+        document.getElementById("resendOTP").classList.remove("hidden");
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  });
+</script>
+
+<style>
+  .countdown {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+{% endblock %}

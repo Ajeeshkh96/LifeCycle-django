@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<br>
+<div class="container mt-5">
+  <h1 class="text-center text-success"><u>Wishlist</u></h1><br>
+
+  <div class="row">
+    {% if wishlist_items %}
+      {% for item in wishlist_items %}
+        <div class="col-md-2">
+          <figure class="card card-product-grid">
+            <div class="img-wrap h-25">
+              <a href="{{ item.product.get_url }}"><img src="{{ item.product.image.url }}"></a>
+            </div> <!-- img-wrap.// -->
+            <figcaption class="info-wrap">
+              <div class="fix-height">
+                <a href="{{ item.product.get_url }}" class="title">{{ item.product.brand }} {{ item.product.model }}</a>
+                <div class="price-wrap mt-2">
+                  <span class="price">$ {{ item.product.price }}</span>
+                </div> <!-- price-wrap.// -->
+              </div>
+              <a href="{{ item.product.get_url }}" class="btn btn-block btn-primary">View Details</a>
+              <a href="{% url 'remove_from_wishlist' item.id %}" class="btn btn-block btn-danger">Remove</a>
+            </figcaption>
+          </figure>
+        </div> <!-- col.// -->
+      {% endfor %}
+    {% else %}
+      <div class="col-md-12">
+        <p>Your wishlist is empty.</p>
+      </div>
+    {% endif %}
+  </div> <!-- row end.// -->
+</div>
+<br><br><br><br><br><br><br><br>
+{% endblock %}

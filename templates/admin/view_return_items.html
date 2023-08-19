@@ -1,0 +1,59 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<div class="container-fluid">
+  <h1 class="text-center text-success"><u>Return Request</u></h1><br>
+
+        {% csrf_token %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in order.orderproduct_set.all %}
+                    {% for returned_item in return_request.returnitem_set.all %}
+                        {% if product in returned_item.returned_items.all %}
+                            <tr>
+                                <td>
+                                    <img src="{{ product.product.image.url }}" class="img-xs border">
+                                    <p class="title mb-0">{{ product.product.brand }} {{ product.product.model }}</p>
+                                    <var class="price text-muted">{{ product.product_price }}</var>
+                                </td>
+                                <td>
+                                    <p class="title mb-0">{{ return_request.reason }}</p>
+                                </td>
+                                <td>
+                                    {% if return_request.status == 'Accepted' %}
+                                    <var class="price text-success">{{ return_request.status }}</var>
+                                    {% elif return_request.status == 'Pending' %}
+                                    <var class="price text-primary">{{ return_request.status }}</var>
+                                    {% else %}
+                                    <var class="price text-danger">{{ return_request.status }}</var>
+                                    {% endif %}
+                                </td>
+
+                                <td width="250">
+                                  <form method="post" action="{% url 'update_return_status' order.id %}">
+                                      {% csrf_token %}
+                                      <select name="status" class="form-control">
+                                          <option value="Accepted" {% if return_request.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                                          <option value="Rejected" {% if return_request.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                      </select>
+                                      <button type="submit" class="btn btn-outline-primary">Update Status</button>
+                                  </form>
+                                  <a href="{% url 'order_details' order.order_number %}" class="btn btn-light">Details</a>
+                              </td>
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}

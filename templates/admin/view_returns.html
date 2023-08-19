@@ -1,0 +1,118 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="section-content padding-y-lg">
+
+  {% include 'includes/alerts.html' %}
+  <div class="container">
+    <div class="row">
+    {% comment %} <aside class="col-md-3">
+      <!--   SIDEBAR   -->
+      <ul class="list-group">
+        <a class="list-group-item active" href="#"> My order history </a>
+        <a class="list-group-item" href="#"> Transactions </a>
+        <a class="list-group-item" href="#"> Return and refunds </a>
+        <a class="list-group-item" href="#">Settings </a>
+        <a class="list-group-item" href="#"> My Selling Items </a>
+        <a class="list-group-item" href="#"> Received orders </a>
+      </ul>
+      <br>
+      <a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>
+      <!--   SIDEBAR .//END   -->
+    </aside> {% endcomment %}
+
+    <main class="col-md-9">
+      {% for order in orders %}
+      <article class="card border border-secondary">
+          <header class="card-header">
+              <strong class="d-inline-block mr-3">Order ID: {{ order.order_number }}</strong>
+              <span>Order Date: {{ order.created_at }}</span>
+          </header>
+          <div class="card-body">
+              <div class="row">
+                  <div class="col-md-8">
+                      <h6 class="text-muted">Delivery to</h6>
+                      <p>
+                          {{ order.first_name }} {{ order.last_name }} <br>
+                          Phone {{ order.phone }} Email: {{ order.email }} <br>
+                          Location: {{ order.address_line_1 }}, {{ order.city }}, {{ order.state }} <br>
+                          P.O. Box: {{ order.pin_code }}
+                      </p>
+                  </div>
+                  <div class="col-md-4">
+                      <h6 class="text-muted">Payment</h6>
+                        {% if order.payment.payment_method == 'wallet' %}
+                        <span class="text-success">
+                            <i class="fab fa-lg fa-google-wallet"></i>
+                            {{ order.payment }}
+                        </span>
+                        {% else %}
+                        <span class="text-success">
+                            <i class="fab fa-lg fa-cc-visa"></i>
+                            {{ order.payment }}
+                        </span>
+                        {% endif %}
+                        <p>
+                            Shipping fee: $5 <br>
+                            <span class="b">Total: {{ order.payment.amount_paid }}</span>
+                        </p>
+                  </div>
+              </div> <!-- row.// -->
+          </div> <!-- card-body .// -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+                {% for return_request in order.return_requests.all %}
+                    {% for return_item in return_request.returnitem_set.all %}
+                        {% comment %} {% if return_item.status == "Processing" %} {% endcomment %}
+                        <tr>
+                            <td>
+                                {% for product in return_item.returned_items.all %}
+                                <img src="{{ product.product.image.url }}" class="img-xs border">
+                                <p class="title mb-0">{{ product.product.brand }} {{ product.product.model }}</p>
+                                <var class="price text-muted">{{ product.product_price }}</var>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if return_item.status == "Completed" %}
+                                <var class="price text-success">{{ return_item.status }}</var>
+                                {% elif return_item.status == "Rejected" %}
+                                <var class="price text-danger">{{ return_item.status }}</var>
+                                {% else %}
+                                <var class="price text-primary">{{ return_item.status }}</var>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <p class="payment-method">
+                                    {% if order.payment.payment_method == 'wallet' %}
+                                    Payment Method: <span class="text-primary">Wallet<span>
+                                    {% else %}
+                                    Payment Method: <span class="text-primary">{{ order.payment.payment_method }}</span>
+                                    {% endif %}
+                                </p>
+                            </td>
+
+                        </tr>
+                        {% comment %} {% endif %} {% endcomment %}
+                    {% endfor %}
+                {% endfor %}
+                <tr>
+                    <td colspan="2">
+                        <a href="{% url 'view_return_items' order.id %}" class="btn btn-danger">Returned Items</a>
+                    </td>
+                </tr>
+            </table>
+
+          </div> <!-- table-responsive .end// -->
+      </article> <!-- order-group.// -->
+      {% endfor %}
+  </main>
+
+
+  </div> <!-- row.// -->
+  </div>
+
+
+  </section>
+
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'user/user_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row">
+    {% for coupon in coupons %}
+    <div class="col-md-4">
+      <div class="coupon-card">
+        <div class="coupon-code">
+          <span>COUPON</span>
+          <strong>{{ coupon.code }}</strong>
+        </div>
+        <div class="coupon-description">
+          <h2>GET {{ coupon.discount_amount }} OFF</h2>
+          <p>Valid to {{ coupon.valid_to }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<link rel="stylesheet" href="{% static 'css/coupon.css'%}">
+
+{% endblock %}

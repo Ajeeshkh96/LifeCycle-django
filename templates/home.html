@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ========================= SECTION MAIN ========================= -->
+<!-- Start Banner -->
+<div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        {% for image in banner_images %}
+            <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
+    <div class="carousel-inner">
+        {% for image in banner_images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="container">
+                    <div class="row p-5">
+                        <div class="mx-auto col-md-8 col-lg-12 order-lg-last">
+                            <a href="{{ image.product.get_url }}"><img class="img-fluid" src="{{ image.image.url }}" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="prev">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button" data-bs-slide="next">
+        <i class="fas fa-chevron-right"></i>
+    </a>
+</div>
+<!-- End Banner -->
+<!-- ========================= SECTION MAIN END// ========================= -->
+
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm">
+<div class="container">
+
+<header class="section-heading">
+	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
+	<h3 class="section-title">Popular products</h3>
+</header><!-- sect-heading -->
+
+
+<div class="row">
+	{% for product in products %}
+	<div class="col-md-3">
+		<div class="card card-product-grid">
+			<a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
+			<figcaption class="info-wrap">
+				<a href="{{ product.get_url }}" class="title">{{ product.brand }} {{product.model}}</a>
+				<div class="price mt-1">₹{{ product.price }}</div> <!-- price-wrap.// -->
+			</figcaption>
+		</div>
+	</div> <!-- col.// -->
+	{% endfor %}
+</div> <!-- row.// -->
+
+</div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+
+
+
+
+
+
+</body>
+</html>
+
+{% endblock %}

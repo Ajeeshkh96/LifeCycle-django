@@ -1,0 +1,34 @@
+
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+    
+    <br><br>
+    <div class="container mt-5">
+      <h1>View Coupons</h1>
+      <hr>
+      <div class="float-end"><a href="{% url 'add_coupon' %}" class="btn btn-success">Add coupon</a></div>
+      <br><br>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Code</th>
+                    <th>Discount Amount</th>
+                    <th>Valid From</th>
+                    <th>Valid To</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                <tr>
+                    <td>{{ coupon.code }}</td>
+                    <td>{{ coupon.discount_amount }}</td>
+                    <td>{{ coupon.valid_from }}</td>
+                    <td>{{ coupon.valid_to }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

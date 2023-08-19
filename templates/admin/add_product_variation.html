@@ -1,0 +1,32 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid w-50 float-left">
+    <h1 class="mb-4">Add Product Variation</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="frame_size">Frame Size:</label>
+            <input type="text" class="form-control" name="frame_size" required>
+            <div class="invalid-feedback">Please provide the frame size.</div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="color">Color:</label>
+            <input type="text" class="form-control" name="color" required>
+            <div class="invalid-feedback">Please provide the color.</div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="stock">Stock:</label>
+            <input type="number" class="form-control" name="stock" required>
+            <div class="invalid-feedback">Please provide the stock quantity.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Variation</button>
+    </form>
+</div>
+
+{% endblock %}

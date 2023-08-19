@@ -1,0 +1,70 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+{% include 'includes/alerts.html' %}
+<div class="text-center float-end">
+  <a class="btn btn-success" href="{% url 'admin_product_add' %}">Add Product</a><br><br>
+</div>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>category</th>
+      <th>price($)</th>
+      {% comment %} <th>stock</th> {% endcomment %}
+      <th>product description</th>
+      {% comment %} <th>color</th>
+      <th>framesize</th> {% endcomment %}
+      <th>image</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for prd in prd_details %}
+    <tr>
+      <td>{{prd.brand}} {{prd.model}}</td>
+      <td>{{prd.category}}</td>
+      <td>{{prd.price}}</td>
+      {% comment %} <td>
+        {% for variation in prd.variation_set.all %}
+            {{ variation.stock }} <!-- Assuming variation has a 'stock' field -->
+        {% endfor %}
+      </td> {% endcomment %}
+      <td>{{prd.description}}</td>
+
+{% comment %} 
+      <td>
+      {% for color_variation in prd.variation_set.colors %}
+      {{ color_variation.variation_value }}
+      {% endfor %}</td>
+
+      <td>
+      {% for size_variation in prd.variation_set.sizes %}
+      {{ size_variation.variation_value }}
+      {% endfor %}</td> {% endcomment %}
+
+      <td>
+        {% for image in prd.images.all %}
+        <img src="{{ image.image.url }}" alt="Product Image" width="150" height="100">
+        {% empty %}
+        <p>No images available.</p>
+        {% endfor %}
+      </td>
+
+      <td>
+        <div class="btn btn-group">
+        <a class="btn btn-warning" href="{% url 'admin_product_update' prd.id %}">Edit</a>
+        <a class="btn btn-info" href="{% url 'product_variations' prd.id %}">Variation</a>
+
+        <a class="btn btn-danger" href="admin_product_delete?id={{prd.id}}">delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="text-center text-danger">{{msg}}</div>
+</div>
+
+{% endblock content %}

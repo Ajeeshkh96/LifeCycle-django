@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <!-- User Profile Card -->
+      <div class="card shadow">
+        {% comment %} <img src="path/to/user-avatar.jpg" class="card-img-top" alt="User Avatar"> {% endcomment %}
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+          <p class="card-text text-muted">Web Developer</p>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <!-- User Profile Details -->
+      <div class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title">User Details</h5>
+          <ul class="list-group">
+            <li class="list-group-item"><strong class="text-success">Username:</strong> {{ user.username }}</li>
+            <li class="list-group-item"><strong class="text-success">Email:</strong> {{ user.email }}</li>
+            <li class="list-group-item"><strong class="text-success">Phone Number:</strong> {{ user.phone_number }}</li>
+            <!-- Add other user profile details here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+<br><br><br><br>
+  <div class="container mt-5">
+    <h1>{{ offer.name }}</h1>
+    <p><strong>Description:</strong> {{ offer.description }}</p>
+    <p><strong>Start Date:</strong> {{ offer.start_date }}</p>
+    <p><strong>End Date:</strong> {{ offer.end_date }}</p>
+    <p><strong>Discount Percentage:</strong> {{ offer.discount_percentage }}%</p>
+    <p><strong>Applicable Products:</strong></p>
+    <ul class="list-group">
+      {% for product in offer.applicable_products.all %}
+        <li class="list-group-item">{{ product.brand }} {{ product.model }}</li>
+      {% empty %}
+        <li class="list-group-item">No applicable products.</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'offer_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+  </div>
+{% endblock %}
