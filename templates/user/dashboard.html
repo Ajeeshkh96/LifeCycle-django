@@ -27,6 +27,11 @@
                     <i class="fab fa-lg fa-google-wallet"></i>
                     {{ order.payment }}
                 </span>
+                {% elif order.payment.payment_method == 'cash_on_delivery' %}
+                <span class="text-success">
+                    <i class="fas fa-money-bill-wave"></i>
+                    {{ order.payment }}
+                </span>
                 {% else %}
                 <span class="text-success">
                     <i class="fab fa-lg fa-cc-visa"></i>

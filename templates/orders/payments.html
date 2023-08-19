@@ -128,6 +128,11 @@
 					</form>
 
 						<div>
+							<a class="btn btn-primary col-md-12" href="{% url 'cash_on_delivery' order.order_number %}"><i><strong class="text-md">Cash On Delivery</strong></i></a>
+						</div>
+						<br>
+
+						<div>
 							<a class="btn btn-warning col-md-12" href="{% url 'payment_through_wallet' order.order_number %}">Pay with <i><strong class="text-lg">Wallet</strong></i></a>
 						</div>
 						<br>
@@ -277,5 +282,6 @@
 
 });
 </script>
+	
 
 {% endblock %}

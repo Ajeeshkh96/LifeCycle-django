@@ -19,6 +19,14 @@ urlpatterns = [
         views.payment_through_wallet,
         name="payment_through_wallet",
     ),
+
+    path(
+        "cash_on_delivery/<str:order_number>/",
+        views.cash_on_delivery,
+        name="cash_on_delivery",
+    ),
+
+    
     path(
         "cancel_order/<str:order_number>/",
         views.cancel_order,

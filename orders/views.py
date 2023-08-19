@@ -138,11 +138,24 @@ def payment_through_wallet(request, order_number):
             user=request.user, is_ordered=False, order_number=order_number
         )
 
-        wallet = Wallet.objects.get(user=request.user)
-        wallet.balance -= Decimal(
-            order.order_total
-        )  # Deduct the order total from the wallet balance
-        wallet.save()
+        # wallet = Wallet.objects.get(user=request.user)
+        # wallet.balance -= Decimal(
+        #     order.order_total
+        # )  # Deduct the order total from the wallet balance
+        # wallet.save()
+
+        try:
+            wallet = Wallet.objects.get(user=request.user)
+            if wallet.balance < Decimal(order.order_total):
+                return JsonResponse({"error": "Insufficient wallet balance."}, status=400)
+
+            wallet.balance -= Decimal(order.order_total)
+            wallet.save()
+
+        except Wallet.DoesNotExist:
+            # Create a wallet for the user
+            wallet = Wallet.objects.create(user=request.user, balance=Decimal(0))
+            return JsonResponse({"message": "Wallet created. Add funds to place an order."})
 
     except Order.DoesNotExist:
         return JsonResponse({"error": "Order not found."}, status=404)
@@ -219,9 +232,88 @@ def payment_through_wallet(request, order_number):
         return render(request, "orders/order_complete.html", context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return redirect("home")
+    
 
+def cash_on_delivery(request, order_number):
+    try:
+        order = Order.objects.get(
+            user=request.user, is_ordered=False, order_number=order_number
+        )
 
-from decimal import Decimal
+    except Order.DoesNotExist:
+        return JsonResponse({"error": "Order not found."}, status=404)
+
+    payment_id = generate_unique_payment_id(request.user.id)
+    # Store transaction details inside Payment model
+    payment = Payment(
+        user=request.user,
+        payment_id=payment_id,
+        payment_method="cash_on_delivery",
+        amount_paid=0,  # No payment needed for COD
+        status="PENDING",  # COD payments are pending until delivery
+    )
+    payment.save()
+    # Mark the order as paid and save it
+    order.payment = payment
+    order.is_ordered = True
+    order.save()
+
+    # Move the cart items to Order Product table
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    for item in cart_items:
+        orderproduct = OrderProduct(
+            order=order,
+            payment=payment,
+            user=request.user,
+            product=item.product,
+            quantity=item.quantity,
+            product_price=item.product.price,
+            ordered=True,
+            variation=item.variation,
+        )
+        orderproduct.save()
+
+        # Reduce the quantity of the sold products
+        product_variation = item.variation
+        product_variation.stock -= item.quantity
+        product_variation.save()
+
+    # Clear cart
+    CartItem.objects.filter(user=request.user).delete()
+
+    mail_subject = "Thank you for your order!"
+    message = render_to_string(
+        "orders/order_complete.html",
+        {
+            "user": request.user,
+            "order": order,
+        },
+    )
+    to_email = request.user.email
+    send_email = EmailMessage(mail_subject, message, to=[to_email])
+    send_email.send()
+
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+
+        subtotal = 0
+        for i in ordered_products:
+            subtotal += i.product_price * i.quantity
+
+        context = {
+            "order": order,
+            "ordered_products": ordered_products,
+            "order_number": order.order_number,
+            "transID": payment_id,
+            "payment": payment,
+            "subtotal": subtotal,
+        }
+        return render(request, "orders/order_complete.html", context)
+    except (Payment.DoesNotExist, Order.DoesNotExist):
+        return redirect("home")
+
 
 
 def redeem_coupon_payment(request, order_number):
@@ -366,6 +458,24 @@ def cancel_order(request, order_number):
         # Check if the order can be cancelled based on its current status
         if not order.can_be_cancelled():
             return HttpResponse("Cannot cancel this order.")
+        
+        # Check if the payment method was not cash on delivery
+        if order.payment.payment_method != "cash_on_delivery":
+            # Calculate the total payment amount
+            payment_amount = Decimal(order.order_total)
+
+            try:
+                wallet = Wallet.objects.get(user=request.user)
+                wallet.balance += payment_amount
+                wallet.save()
+
+            except Wallet.DoesNotExist:
+                # Create a wallet for the user
+                wallet = Wallet.objects.create(user=request.user, balance=payment_amount)
+
+            # Display a success message about the wallet credit
+            wallet_credit_msg = f"Order cancelled. Amount credited to your wallet: {order.order_total}"
+            messages.success(request, wallet_credit_msg)
 
         # Mark the order as canceled and update product stock
         ordered_products = OrderProduct.objects.filter(order=order)
@@ -388,7 +498,6 @@ def cancel_order(request, order_number):
         send_email = EmailMessage(mail_subject, message, to=[to_email])
         send_email.send()
 
-        messages.success(request, "Order canceled successfully.")
         return redirect("dashboard")
 
     except Order.DoesNotExist:
