@@ -79,7 +79,7 @@
 <div class="container px-0">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     <div class="col">
-      <a href="{% url "add_address" %}" class="text-reset text-decoration-none" role="button"
+      <a href="{% url "add_address_checkout" %}" class="text-reset text-decoration-none" role="button"
         style="max-width: 540px;">
         <div class="card mb-3 h-100" style="border: dashed 2px #ccc;">
           <div class="row g-0 h-100">
@@ -113,11 +113,11 @@
           <p class="card-text m-0">{{address.town_city}}</p>
           <p class="card-text m-0">{{address.postcode}}</p>
           <p class="card-text m-0">Phone number: {{address.phone}}</p>
-          <div class="pt-5">
-            <a href="{% url 'edit_address' address.id %}" class="text-decoration-none">Edit</a>
-            <a href="{% url 'delete_address' address.id %}" class="text-decoration-none">Delete</a>
+          <div class="btn-group pt-5">
+            <a href="{% url 'edit_address_checkout' address.id %}" class="text-decoration-none btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'delete_address_checkout' address.id %}" class="text-decoration-none btn btn-danger btn-sm">Delete</a>
             {% if not address.default %}
-            <a href="{% url 'set_default' address.id %}" class="text-decoration-none">Set Default</a>
+            <a href="{% url 'set_default_checkout' address.id %}" class="text-decoration-none btn btn-secondary btn-sm">Default</a>
             {% endif %}
           </div>
         </div>
@@ -191,5 +191,5 @@
 </div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-
+<br><br><br><br><br><br><br><br><br><br>
 {% endblock %}

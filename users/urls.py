@@ -50,17 +50,34 @@ urlpatterns = [
     path("returned_orders/", views.returned_orders, name="returned_orders"),
     path("addresses/", views.view_address, name="addresses"),
     path("add_address/", views.add_address, name="add_address"),
+    path("add_address_checkout/", views.add_address_checkout, name="add_address_checkout"),
+    
     path("addresses/edit/<slug:id>/", views.edit_address, name="edit_address"),
+    path("addresses_checkout/edit/<slug:id>/", views.edit_address_checkout, name="edit_address_checkout"),
+    
     path(
         "addresses/delete/<slug:id>/",
         views.delete_address,
         name="delete_address",
     ),
     path(
+        "addresses_checkout/delete/<slug:id>/",
+        views.delete_address_checkout,
+        name="delete_address_checkout",
+    ),
+
+    path(
         "addresses/set_default/<slug:id>/",
         views.set_default,
         name="set_default",
     ),
+
+    path(
+        "addresses_checkout/set_default/<slug:id>/",
+        views.set_default_checkout,
+        name="set_default_checkout",
+    ),
+    
     path("admin_dashboard", views.admin_dashboard, name="admin_dashboard"),
     path(
         "download-order-data/",

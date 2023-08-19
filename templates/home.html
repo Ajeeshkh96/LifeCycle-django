@@ -50,7 +50,20 @@
 			<a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
 			<figcaption class="info-wrap">
 				<a href="{{ product.get_url }}" class="title">{{ product.brand }} {{product.model}}</a>
-				<div class="price mt-1">₹{{ product.price }}</div> <!-- price-wrap.// -->
+				<div class="price-wrap mt-2">
+                    <div class="mb-3">
+                        <span class="price">
+                                {% if product.discount_percentage|floatformat:"0" != "0" %}
+                                        <del>$ {{ product.rprice }}</del>
+                                {% endif %}
+                                $ {{ product.price }}
+                        </span>
+                        {% if product.discount_percentage|floatformat:"0" != "0" %}
+                                <span class="discount text-success">
+                                        &nbsp;{{ product.discount_percentage|floatformat:"0" }}% Off
+                                </span>
+                        {% endif %}
+                </div> <!-- price-wrap.// -->
 			</figcaption>
 		</div>
 	</div> <!-- col.// -->

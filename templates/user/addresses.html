@@ -46,13 +46,13 @@
                   <p class="card-text m-0">Phone number: {{address.phone}}</p>
                   <p class="card-text m-0">Email: {{address.email}}</p>
 
-                  <div class="pt-5">
-                    <a href="{% url 'edit_address' address.id %}" class="text-decoration-none">Edit</a>
-                    |
-                    <a href="{% url 'delete_address' address.id %}" class="text-decoration-none">Delete</a>
-                    {% comment %} {% if not address.default %}
-                    | <a href="{% url 'set_default' address.id %}" class="text-decoration-none">Set Default</a>
-                    {% endif %} {% endcomment %}
+                  <div class="btn-group pt-5">
+                    <a href="{% url 'edit_address' address.id %}" class="text-decoration-none btn btn-warning btn-sm">Edit</a>
+                    
+                    <a href="{% url 'delete_address' address.id %}" class="text-decoration-none btn btn-danger btn-sm">Delete</a>
+                    {% if not address.default %}
+                     <a href="{% url 'set_default' address.id %}" class="text-decoration-none btn btn-secondary btn-sm">Set Default</a>
+                    {% endif %}
                   </div>
                 </div>
               </div>

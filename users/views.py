@@ -530,6 +530,20 @@ def add_address(request):
     return render(request, "user/edit_addresses.html", {"form": address_form})
 
 
+def add_address_checkout(request):
+    if request.method == "POST":
+        address_form = UserAddressForm(data=request.POST)
+        if address_form.is_valid():
+            address_form = address_form.save(commit=False)
+            address_form.customer = request.user
+            address_form.save()
+            return HttpResponseRedirect(reverse("checkout"))
+    else:
+        address_form = UserAddressForm()
+    return render(request, "user/edit_addresses.html", {"form": address_form})
+
+
+
 @login_required
 def edit_address(request, id):
     if request.method == "POST":
@@ -545,9 +559,38 @@ def edit_address(request, id):
 
 
 @login_required
+def edit_address_checkout(request, id):
+    if request.method == "POST":
+        address = Address.objects.get(pk=id, customer=request.user)
+        address_form = UserAddressForm(instance=address, data=request.POST)
+        if address_form.is_valid():
+            address_form.save()
+            return HttpResponseRedirect(reverse("checkout"))
+    else:
+        address = Address.objects.get(pk=id, customer=request.user)
+        address_form = UserAddressForm(instance=address)
+    return render(request, "user/edit_addresses.html", {"form": address_form})
+
+
+@login_required
 def delete_address(request, id):
     address = Address.objects.filter(pk=id, customer=request.user).delete()
     return redirect("addresses")
+
+
+@login_required
+def delete_address_checkout(request, id):
+    address = Address.objects.filter(pk=id, customer=request.user).delete()
+    return redirect("checkout")
+
+
+@login_required
+def set_default_checkout(request, id):
+    Address.objects.filter(customer=request.user, default=True).update(
+        default=False
+    )
+    Address.objects.filter(pk=id, customer=request.user).update(default=True)
+    return redirect("checkout")
 
 
 @login_required
@@ -556,7 +599,7 @@ def set_default(request, id):
         default=False
     )
     Address.objects.filter(pk=id, customer=request.user).update(default=True)
-    return redirect("checkout")
+    return redirect("addresses")
 
 
 ###########################################################################

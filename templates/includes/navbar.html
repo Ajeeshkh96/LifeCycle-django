@@ -80,6 +80,15 @@
         <a href="{% url 'login' %}">Sign in</a>
       </div>
     </div>
+
+    <!-- Cart -->
+    <div class="widget-header mr-3">
+      <a href="{% url 'cart' %}">
+        <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
+        <span id="cart-count" class="badge badge-pill badge-danger notify">{{cart_count}}</span>
+      </a>
+    </div>
+
     {% else %}
     <!-- Authenticated User -->
 
@@ -94,6 +103,7 @@
         <span class="badge badge-pill badge-danger notify">{{wishlist_count}}</span>
       </a>
     </div>
+
     <!-- Cart -->
     <div class="widget-header mr-3">
       <a href="{% url 'cart' %}">
@@ -101,6 +111,7 @@
         <span id="cart-count" class="badge badge-pill badge-danger notify">{{cart_count}}</span>
       </a>
     </div>
+
     <!-- Logout Button -->
     <div class="widget-header">
 
@@ -120,6 +131,7 @@
 
     {% endif %}
   </div>
+  
 </div>
 
 <!-- ... -->
