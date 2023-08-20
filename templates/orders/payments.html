@@ -11,7 +11,7 @@
 		<h4 class="text-center mb-20">Review Your Order and Make Payment</h4>
 		<div class="row">
 
-			<aside class="col-lg-8">
+			<aside class="col-md-12 col-lg-8">
 				<div class="card">
 					<h5 class="card-header">Billing Address</h5>
 					<div class="card-body">
@@ -87,7 +87,7 @@
 				</div>
 
 			</aside> <!-- col.// -->
-			<aside class="col-lg-4">
+			<aside class="col-md-12 col-lg-4">
 
 				<div class="card">
 					<div class="card-body">
@@ -128,12 +128,12 @@
 					</form>
 
 						<div>
-							<a class="btn btn-primary col-md-12" href="{% url 'cash_on_delivery' order.order_number %}"><i><strong class="text-md">Cash On Delivery</strong></i></a>
+							<a class="btn btn-primary col-12" href="{% url 'cash_on_delivery' order.order_number %}"><i><strong class="text-md">Cash On Delivery</strong></i></a>
 						</div>
 						<br>
 
 						<div>
-							<a class="btn btn-warning col-md-12" href="{% url 'payment_through_wallet' order.order_number %}">Pay with <i><strong class="text-lg">Wallet</strong></i></a>
+							<a class="btn btn-warning col-12" href="{% url 'payment_through_wallet' order.order_number %}">Pay with <i><strong class="text-lg">Wallet</strong></i></a>
 						</div>
 						<br>
 

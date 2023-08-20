@@ -9,11 +9,11 @@
 <!-- ============================ COMPONENT 1 ================================= -->
 
 <div class="row">
-	<aside class="col-lg-6">
+	<aside class="col-md-12 col-lg-6">
 <div class="card" style="display:none">
   <div class="card-body">
     <h4 class="card-title mb-4">Billing Address</h4>
-    <form action="{% url 'place_order' %}" method="POST">
+    <form id="place-order-form" action="{% url 'place_order' %}" method="POST">
       {% csrf_token %}
 
       <div class="form-row">
@@ -128,7 +128,7 @@
   </div>
 </div>
 	</aside> <!-- col.// -->
-	<aside class="col-lg-6">
+	<aside class="col-md-12 col-lg-6">
 
 		<div class="card">
 		<div class="card-body">
@@ -174,9 +174,14 @@
       </table>
 
 
-      <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
-			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+  <button type="submit" name="submit" id="place-order-button" class="btn btn-primary btn-block">Place Order</button>
+  <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
       </form>
+
+      <div id="select-id-message" class="alert alert-danger" style="display: none;">
+        Please add address before Placing an order.
+      </div>
+
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
@@ -190,6 +195,19 @@
 
 </div> <!-- container .//  -->
 </section>
+
+<script>
+  document.getElementById('place-order-button').addEventListener('click', function (event) {
+    // Check if no addresses are added
+    if ({{ addresses|length }} === 0) {
+        event.preventDefault(); // Prevent form submission
+        const selectIdMessage = document.getElementById('select-id-message');
+        selectIdMessage.style.display = 'block'; // Display the message
+        return;
+    }
+});
+</script>
+
 <!-- ========================= SECTION CONTENT END// ========================= -->
 <br><br><br><br><br><br><br><br><br><br>
 {% endblock %}

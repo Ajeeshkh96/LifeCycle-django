@@ -84,6 +84,13 @@
             <input type="file" name="image" id="id_images" multiple>
         </div>
 
+        <!-- Add this container for image preview and cropping -->
+        <div class="col-md-12 mt-3">
+            <h5>Image Preview:</h5>
+            <div id="image-preview" class="mt-2"></div>
+            <button type="button" id="crop-button" class="btn btn-primary mt-3" style="display: none;">Crop Image</button>
+        </div>
+
         <!-- Is Available -->
         <div class="col-md-6">
             <label for="{{ form.is_available.id_for_label }}" class="form-label">Is Available:</label>
@@ -97,6 +104,72 @@
         </div>
     </form>
 </div>
+
+
+<!-- Add this script at the bottom of your template or in a separate JavaScript file -->
+<script>
+    // Function to initialize the Cropper.js instance for image cropping
+    function initImageCropper() {
+      const imageInput = document.getElementById('id_images');
+      const imagePreview = document.getElementById('image-preview');
+      const cropButton = document.getElementById('crop-button');
+
+      imageInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function () {
+          const img = new Image();
+          img.src = reader.result;
+
+          img.onload = function () {
+            // Clear previous previews and append the new one
+            imagePreview.innerHTML = '';
+            imagePreview.appendChild(img);
+
+            // Initialize Cropper.js
+            const cropper = new Cropper(img, {
+              aspectRatio: 4 / 3, // You can set the aspect ratio for cropping (e.g., 16 / 9 for 16:9)
+              viewMode: 1,
+              guides: true,
+              background: false,
+              autoCropArea: 0.8,
+              responsive: true,
+            });
+
+            // Show the crop button after image loaded
+            cropButton.style.display = 'block';
+
+            // Attach event listener to crop button
+            cropButton.addEventListener('click', function () {
+              // Get cropped canvas and convert it to blob
+              const croppedCanvas = cropper.getCroppedCanvas();
+              croppedCanvas.toBlob(function (blob) {
+                // Create a new image element to preview the cropped image
+                const croppedImg = new Image();
+                croppedImg.src = URL.createObjectURL(blob);
+
+                // Set the size of the preview image
+                croppedImg.style.maxWidth = '300px'; // Adjust the size as needed
+
+                // Clear previous previews and append the new one
+                imagePreview.innerHTML = '';
+                imagePreview.appendChild(croppedImg);
+              });
+            });
+          };
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Call the function to initialize the image cropper
+    initImageCropper();
+  </script>
 
 
 {% endblock content %}

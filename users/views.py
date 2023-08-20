@@ -70,7 +70,8 @@ def home(request):
     """
     products = Product.objects.all().filter(is_available=True)
     banner_images = ProductBannerImage.objects.all()
-    context = {"banner_images": banner_images, "products": products}
+    context = {"banner_images": banner_images, "products": products, 
+               "categories": Category.objects.all(),}
     return render(request, "home.html", context)
 
 
@@ -102,7 +103,6 @@ def about(request):
 
 from django.db.models import F
 
-
 def store(request, category_slug=None):
     categories = None
     variations = None
@@ -110,12 +110,11 @@ def store(request, category_slug=None):
     frame_size_filters = request.GET.getlist("frame-size")
     min_price = request.GET.get("min-price")
     max_price = request.GET.get("max-price")
+    category_filter = request.GET.get("category")  # New category filter
 
     if category_slug:
         categories = get_object_or_404(Category, slug=category_slug)
-        variations = ProductVariation.objects.filter(
-            product__category=categories
-        )
+        variations = ProductVariation.objects.filter(product__category=categories)
     else:
         variations = ProductVariation.objects.all()
 
@@ -129,6 +128,9 @@ def store(request, category_slug=None):
         variations = variations.filter(
             product__price__range=(min_price, max_price)
         )
+
+    if category_filter:  # Apply category filter if selected
+        variations = variations.filter(product__category__category_name=category_filter)
 
     product_ids = variations.values_list("product__id", flat=True).distinct()
     products = Product.objects.filter(id__in=product_ids)
@@ -146,6 +148,7 @@ def store(request, category_slug=None):
     context = {
         "products": paged_products,
         "product_count": product_count,
+        "categories": Category.objects.all(),  # Provide categories for template rendering
     }
     return render(request, "store.html", context)
 
@@ -531,17 +534,20 @@ def add_address(request):
 
 
 def add_address_checkout(request):
-    if request.method == "POST":
-        address_form = UserAddressForm(data=request.POST)
-        if address_form.is_valid():
-            address_form = address_form.save(commit=False)
-            address_form.customer = request.user
-            address_form.save()
-            return HttpResponseRedirect(reverse("checkout"))
+    if not request.user.is_authenticated:
+        return redirect("login")
     else:
-        address_form = UserAddressForm()
-    return render(request, "user/edit_addresses.html", {"form": address_form})
+        if request.method == "POST":
+            address_form = UserAddressForm(data=request.POST)
+            if address_form.is_valid():
+                address = address_form.save(commit=False)
+                address.customer = request.user
+                address.save()
+                return HttpResponseRedirect(reverse("checkout"))
+        else:
+            address_form = UserAddressForm()
 
+    return render(request, "user/edit_addresses.html", {"form": address_form})
 
 
 @login_required
@@ -998,10 +1004,10 @@ def admin_product_delete(request):
     prd_details.delete()
     prd_details = Product.objects.all()
     cat_details = Category.objects.all()
+    messages.error(request, "product deleted successfully")
     context = {
         "prd_details": prd_details,
         "cat_details": cat_details,
-        "messages": "deleted Successfully",
     }
     return render(request, "admin/admin_product_view.html", context)
 

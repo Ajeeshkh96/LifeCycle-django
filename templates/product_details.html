@@ -24,152 +24,153 @@
 <section class="section-content padding-y bg">
 	<div class="container">
 
-		<!-- ============================ COMPONENT 1 ================================= -->
-		<div class="card">
-			<div class="row no-gutters">
-					<aside class="col-md-6">
-							<article class="gallery-wrap">
-									<div class="img-big-wrap img-fluid">
-											<a href="#">
-													<img id="big-image" src="{{ single_product.image.url }}" alt="Product Image">
-											</a>
-									</div>
-									<!-- img-big-wrap.// -->
-							</article>
-							<!-- gallery-wrap .end// -->
-							<div style="margin: 4px, 4px;
-											padding: 4px;
-											background-color: white;
-											width: 550px;
-											overflow-x: auto;
-											overflow-y: hidden;
-											white-space: nowrap;">
-									{% for image in product_images %}
-									<a href="#"><img src="{{image.image.url}}" height="150" width="150" onclick="changeBigImage(this)"></a>
-									{% endfor %}
-							</div>
-					</aside>
-	
-					<main class="col-md-6 border-left">
-							<form action="{% url 'add_cart' single_product.id %}" method="POST">
-									{% csrf_token %}
-									<article class="content-body">
-											<h2 class="title">{{ single_product.brand }} {{ single_product.model }}</h2>
-											<div class="mb-3">
-													<span class="price">
-															{% if single_product.discount_percentage|floatformat:"0" != "0" %}
-																	<del>$ {{ single_product.rprice }}</del>
-															{% endif %}
-															$ {{ single_product.price }}
-													</span>
-													{% if single_product.discount_percentage|floatformat:"0" != "0" %}
-															<span class="discount text-success">
-																	&nbsp;{{ single_product.discount_percentage|floatformat:"0" }}% Off
-															</span>
-													{% endif %}
+			<!-- ============================ COMPONENT 1 ================================= -->
+			<div class="card">
+					<div class="row no-gutters">
+								<aside class="col-md-6"> <!-- Rearranged order for mobile devices -->
+									<article class="gallery-wrap">
+											<div class="img-big-wrap img-fluid">
+													<a href="#">
+															<img id="big-image" class="img-fluid" src="{{ single_product.image.url }}" alt="Product Image">
+													</a>
 											</div>
-											<p>{{ single_product.description }}</p>
-											<hr>
-											<br>
-											{% if single_product.productvariation_set.all %}
-													<div class="mb-2">
-															<label for="size-color-buttons" class="form-label text-dark"><b>Select Size and Color:</b></label>
-															<br><br>
-															<div id="size-color-buttons" class="btn-group-horizontal">
-																	{% for variation in single_product.productvariation_set.all|sort_variations %}
-																			{% if variation.stock > 0 %}
-																					<input type="button" class="btn btn-outline-primary size-color-button" data-variation-id="{{ variation.id }}" data-size="{{ variation.frame_size }}" data-color="{{ variation.color }}" value="{{ variation.frame_size }} - {{ variation.color }}">
-																			{% else %}
-																					<button type="button" class="btn btn-outline-danger size-color-button" disabled>{{ variation.frame_size }} - {{ variation.color }} - Out of Stock </button>
-																			{% endif %}
-																	{% endfor %}
-															</div>
-													</div>
-													<hr>
-													{% if orderproduct %}
-													<span class="text-success">You previously ordered this item</span>
-													{% endif %}
-													<hr>
-													{% if in_cart %}
-													<span class="text-success">Item is already in your cart</span>
-													{% endif %}
-													<hr>
-													<input type="hidden" name="variation_id" value="">
-													{% if in_cart %}
-														 <button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart <i class="fas fa-shopping-cart"></i></button>
-															<a href="{% url 'cart' %}" class="btn btn-secondary">View cart <i class="fas fa-eye"></i></a>
-															
-													{% else %}
-															<button type="submit" class="btn btn-primary" id="add-to-cart-button" disabled>Add to Cart <i class="fas fa-shopping-cart"></i></button>
-													{% endif %}
-
-													{% if user.is_authenticated %}
-													<a class="btn btn-outline-danger" href="{% url 'add_to_wishlist' single_product.id %}">Add to Wishlist <i class="fas fa-heart"></i></a>
-													{% endif %}
-													<span id="select-id" style="display: none;" class="text-warning">Please select size and color</span>
-											{% endif %}
+											<!-- img-big-wrap.// -->
 									</article>
-							</form>
-							<br><br>
-					</main>
+									<!-- gallery-wrap .end// -->
+									<div class="mobile-gallery-wrap"> <!-- Added a new container for mobile image gallery -->
+											{% for image in product_images %}
+											<a href="#"><img src="{{image.image.url}}" height="150" width="150" onclick="changeBigImage(this)" alt="Gallery Image"></a>
+											{% endfor %}
+									</div>
+							</aside>
+							<main class="col-md-6 border-left"> <!-- Rearranged order for mobile devices -->
+									<form id="product-form" action="{% url 'add_cart' single_product.id %}" method="POST">
+											<!-- Form content -->
+												{% csrf_token %}
+												<article class="content-body">
+														<h2 class="title">{{ single_product.brand }} {{ single_product.model }}</h2>
+														<div class="mb-3">
+																<span class="price">
+																		{% if single_product.discount_percentage|floatformat:"0" != "0" %}
+																				<del>$ {{ single_product.rprice }}</del>
+																		{% endif %}
+																		$ {{ single_product.price }}
+																</span>
+																{% if single_product.discount_percentage|floatformat:"0" != "0" %}
+																		<span class="discount text-success">
+																				&nbsp;{{ single_product.discount_percentage|floatformat:"0" }}% Off
+																		</span>
+																{% endif %}
+														</div>
+														<p>{{ single_product.description }}</p>
+														<hr>
+														<br>
+														{% if single_product.productvariation_set.all %}
+																<div class="mb-2">
+																		<label for="size-color-buttons" class="form-label text-dark"><b>Select Size and Color:</b></label>
+																		<br><br>
+																		<div id="size-color-buttons" class="btn-group-horizontal">
+																				{% for variation in single_product.productvariation_set.all|sort_variations %}
+																						{% if variation.stock > 0 %}
+																								<input type="button" class="btn btn-outline-primary size-color-button" data-variation-id="{{ variation.id }}" data-size="{{ variation.frame_size }}" data-color="{{ variation.color }}" value="{{ variation.frame_size }} - {{ variation.color }}">
+																						{% else %}
+																								<button type="button" class="btn btn-outline-danger size-color-button" disabled>{{ variation.frame_size }} - {{ variation.color }} - Out of Stock </button>
+																						{% endif %}
+																				{% endfor %}
+																		</div>
+																</div>
+																<hr>
+																{% if orderproduct %}
+																<span class="text-success">You previously ordered this item</span>
+																{% endif %}
+																<hr>
+																{% if in_cart %}
+																<span class="text-success">Item is already in your cart</span>
+																{% endif %}
+																<hr>
+																<input type="hidden" name="variation_id" value="">
+																{% if in_cart %}
+																		<button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+																		<a href="{% url 'cart' %}" class="btn btn-secondary">View cart <i class="fas fa-eye"></i></a>
+																{% else %}
+																		<button type="submit" class="btn btn-primary" id="add-to-cart-button">Add to Cart <i class="fas fa-shopping-cart"></i></button>
+																{% endif %}
+																{% if user.is_authenticated %}
+																<a class="btn btn-outline-danger" href="{% url 'add_to_wishlist' single_product.id %}">Add to Wishlist <i class="fas fa-heart"></i></a>
+																{% endif %}
+																<hr>
+																<div id="select-id-message" class="alert alert-danger" style="display: none;">
+																	Please select frame size and color before adding to cart.
+																</div>
+															
+														{% endif %}
+												</article>
+									</form>
+									<br><br>
+							</main>
+					</div>
+					<!-- row.// -->
 			</div>
+			<!-- card.// -->
+
 	</div>
-	
-	<script>
-			function changeBigImage(clickedImage) {
-					const bigImage = document.getElementById("big-image");
-					bigImage.src = clickedImage.src;
-			}
-	
-			var selectedVariationId = null;
-	
-			// Function to handle the click event on the size-color buttons
-			document.getElementById('size-color-buttons').addEventListener('click', function (event) {
-					var target = event.target;
-					if (target && target.classList.contains('size-color-button')) {
-							var variationId = target.getAttribute('data-variation-id');
-							var size = target.getAttribute('data-size');
-							var color = target.getAttribute('data-color');
-	
-							// Store the selected variation ID
-							selectedVariationId = variationId;
-	
-							// Set the variation ID in the form input field
-							document.getElementsByName('variation_id')[0].value = selectedVariationId;
-	
-							// Enable or disable the "Add to Cart" button based on selection
-							updateAddToCartButtonStatus();
-					}
-			});
-	
-			// Function to enable or disable the "Add to Cart" button based on selection
-			function updateAddToCartButtonStatus() {
-					const addToCartButton = document.getElementById('add-to-cart-button');
-					const selectIdMessage = document.getElementById('select-id');
-					if (selectedVariationId) {
-							addToCartButton.disabled = false;
-							selectIdMessage.style.display = 'none';
-					} else {
-							addToCartButton.disabled = true;
-							selectIdMessage.style.display = 'block';
-					}
-			}
-	
-			// Initial call to update the "Add to Cart" button status on page load
-			updateAddToCartButtonStatus();
-	</script>
-	
-	
-
-						</article> <!-- product-info-aside .// -->
-					</form>
-				</main> <!-- col.// -->
-			</div> <!-- row.// -->
-		</div> <!-- card.// -->
-
-	</div> <!-- container .//  -->
+	<!-- container .//  -->
 </section>
+
 <!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+<style>
+	/* Add your custom CSS styles here */
+
+	/* Adjust image gallery on mobile devices */
+	@media (max-width: 768px) {
+			.mobile-gallery-wrap {
+					margin: 4px;
+					padding: 4px;
+					background-color: white;
+					width: 100%;
+					overflow-x: auto;
+					overflow-y: hidden;
+					white-space: nowrap;
+			}
+	}
+</style>
+
+<script>
+	// JavaScript code for changing the big image
+	function changeBigImage(clickedImage) {
+			const bigImage = document.getElementById("big-image");
+			bigImage.src = clickedImage.src;
+	}
+
+	var selectedVariationId = null;
+
+	// Function to handle the click event on the size-color buttons
+	document.getElementById('size-color-buttons').addEventListener('click', function (event) {
+			var target = event.target;
+			if (target && target.classList.contains('size-color-button')) {
+					var variationId = target.getAttribute('data-variation-id');
+					var size = target.getAttribute('data-size');
+					var color = target.getAttribute('data-color');
+
+					// Store the selected variation ID
+					selectedVariationId = variationId;
+
+					// Set the variation ID in the form input field
+					document.getElementsByName('variation_id')[0].value = selectedVariationId;
+			}
+	});
+
+	document.getElementById('product-form').addEventListener('submit', function (event) {
+			if (!selectedVariationId) {
+					event.preventDefault(); // Prevent form submission
+					const selectIdMessage = document.getElementById('select-id-message');
+					selectIdMessage.style.display = 'block'; // Display the message
+					return;
+			}
+	});
+</script>
 
 
 {% endblock %}

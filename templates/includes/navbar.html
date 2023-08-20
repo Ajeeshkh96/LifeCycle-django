@@ -28,129 +28,117 @@
 </div> <!-- container //  -->
 </nav>
 
-<section class="header-main border-bottom" style="background-color:#2cff0054;">
+<style>
+  /* Add your custom CSS styles here */
+  .navbar:not(.navbar-expand-sm) {  /* Exclude the second navbar from this style */
+    background: rgb(40,200,48);
+    background: linear-gradient(90deg, rgba(40,200,48,1) 0%, rgba(2,0,36,1) 60%);  
+  }
+  .navbar-brand {
+    color: white;
+    font-size: 24px;
+  }
+  .navbar-toggler {
+    border: none;
+  }
+  .navbar-toggler-icon {
+    background-color: white;
+  }
+  .nav-link {
+    color: white;
+  }
+</style>
+
+
+<nav class="navbar navbar-expand-lg">
   <div class="container">
-<div class="row align-items-center">
-  <div class="col-lg-2 col-md-3 col-6">
-    <a href="{% url 'home' %}" class="brand-wrap">
-      <img class="logo" src="{% static 'img/logo1.jpg' %}">
-    </a> <!-- brand-wrap.// -->
-  </div>
-  <div class="col-lg col-sm col-md col-6 flex-grow-0">
-    <div class="category-wrap dropdown d-inline-block float-right">
-      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-bars"></i> All category
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="{% url 'store' %}">All Products </a>
-        {% for category in links %}
-          <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }} </a>
-        {% endfor %}
-      </div>
-    </div>  <!-- category-wrap.// -->
-  </div> <!-- col.// -->
-  <a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
-  <div class="col-lg  col-md-6 col-sm-12 col">
-    <form action="{% url 'search' %}" class="search" method="GET">
-      <div class="input-group w-75">
-          <input type="text" class="form-control" placeholder="Search" name="keyword">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img class="logo" src="{% static 'img/logo1.jpg' %}" alt="Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'store' %}">Store</a>
+        </li>
 
-          <div class="input-group-append">
-              <button class="btn btn-primary" type="submit">
-                  <i class="fa fa-search"></i>
-              </button>
+        <li class="nav-item">
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Categories
+            </a>
+            <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+              <a href="{% url 'store' %}" class="dropdown-item">All Categories</a>
+              {% for category in categories %}
+                <a href="{% url 'store' %}?category={{ category.category_name }}" class="dropdown-item">{{ category.category_name }}</a>
+              {% endfor %}
+            </div>
           </div>
-      </div>
-  </form> <!-- search-wrap .end// -->
+        </li>
+        <div class="nav-links-container">
+          <li class="nav-item">
+            <form action="{% url 'search' %}" class="form-inline my-2 my-lg-0">
+              <div class="d-flex flex-column flex-sm-row">
+                <input class="form-control mb-2 mb-sm-0 mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>                        
+            </form>
+          </li>
+        </div>
+        <li class="nav-item">
+          <div class="nav-links-container"> <!-- Wrap both buttons in a container -->
+              {% if user.id is None %}
+              <a class="nav-link" href="{% url 'login' %}">Sign In</a>
+              {% else %}
+              <div class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Welcome, {{ user.username }}!
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="userDropdown">
+                      <!-- Dropdown menu items -->
+                      <a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a>
 
-  </div> <!-- col.// -->
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'user_profile' %}">Profile</a>
+                      <a class="dropdown-item" href="{% url 'resetPassword' %}">Change Password</a>
+                      <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                      <!-- Add other dropdown items if needed -->
+                  </div>
+              </div>
+              <a href="{% url 'wishlist' %}" class="widget-header pl-3">
+                <div class="icon icon-sm rounded-circle "><i class="fa fa-heart"></i></div>
+                <span class="badge badge-pill badge-danger notify">{{wishlist_count}}</span>
+              </a>
+              {% endif %}
+              <a href="{% url 'cart' %}" class="widget-header pl-3">
+                <div class="icon icon-sm rounded-circle "><i class="fa fa-shopping-cart"></i></div>
+                <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
+              </a>
+          </div>
+      </li>
+      
 
- <!-- ... -->
-
-<!-- ... -->
-
-<!-- User Actions -->
-<div class="col-lg-3 col-md-6 col-sm-12 col">
-  <div class="d-flex justify-content-end align-items-center">
-    {% if user.id is None %}
-    <!-- Guest User -->
-    <div class="widget-header">
-      <small class="title text-muted">Welcome guest!</small>
-      <div>
-        <a href="{% url 'login' %}">Sign in</a>
-      </div>
-    </div>
-
-    <!-- Cart -->
-    <div class="widget-header mr-3">
-      <a href="{% url 'cart' %}">
-        <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-        <span id="cart-count" class="badge badge-pill badge-danger notify">{{cart_count}}</span>
-      </a>
-    </div>
-
-    {% else %}
-    <!-- Authenticated User -->
-
-    <!-- Dashboard Dropdown -->
-    <div>
-      <a class="btn btn-secondary btn-sm" href="{% url 'dashboard' %}">Dashboard</a>
-    </div>
-    <!-- Wishlist -->
-    <div class="widget-header mr-3">
-      <a href="{% url 'wishlist' %}">
-        <div class="icon icon-sm rounded-circle border"><i class="fa fa-heart"></i></div>
-        <span class="badge badge-pill badge-danger notify">{{wishlist_count}}</span>
-      </a>
-    </div>
-
-    <!-- Cart -->
-    <div class="widget-header mr-3">
-      <a href="{% url 'cart' %}">
-        <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-        <span id="cart-count" class="badge badge-pill badge-danger notify">{{cart_count}}</span>
-      </a>
-    </div>
-
-    <!-- Logout Button -->
-    <div class="widget-header">
-
-    </div>
-
-    <div class="dropdown mr-3">
-      <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dashboardDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        Settings
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dashboardDropdown">
-        <li><a class="dropdown-item" href="{% url 'user_profile' %}">Profile</a></li>
-        <li><a class="dropdown-item" href="{% url 'resetPassword' %}">Change Password</a></li>
-        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-        <!-- Add other dropdown items if needed -->
       </ul>
     </div>
-
-    {% endif %}
   </div>
-  
-</div>
-
-<!-- ... -->
-
-<!-- ... -->
-
-
-</div> <!-- row.// -->
-</div> <!-- container.// -->
-</section> <!-- header-main .// -->
-
-
-
-          <script>
-            $(document).ready(function() {
-              $('.dropdown-toggle').dropdown();
-          });
-
-          </script>
-
+</nav>
 
 </header> <!-- section-header.// -->
+
+<style>
+  /* Add this CSS to your stylesheet */
+.nav-links-container {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    margin-right: 15px; /* Adjust spacing between buttons */
+}
+
+</style>
